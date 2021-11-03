@@ -1,3 +1,26 @@
-body {
-    background: red;
+#form {
+    display: flex;
+    justify-content: center;
+    column-gap: 2em;
+    background: #dddddd;
+    position: fixed;
+    bottom: 0;
+    padding: 1em;
+    width: 100%;
+}
+
+#form input {
+    width: 50%;
+    border-radius: 50px;
+}
+
+#form button {
+    padding: 1em;
+    border-radius: 50px;
+}
+
+ul li {
+    list-style-type: none;
+    background: #3574bd;
+    padding: 1em;
 }
