@@ -1,4 +1,3 @@
-import fs from "fs"
 import path from "path"
 import http from "http"
 import express from "express"
@@ -6,6 +5,8 @@ import {
     Server,
     Socket
 } from "socket.io"
+import { User } from "./User"
+import { Users } from "./UserCollection"
 
 const webSrv = express()
 const httpSrv = http.createServer(webSrv)
@@ -21,6 +22,15 @@ webSrv.get('/sources/:file', (req, res) => {
 })
 
 wsSrv.on("connection", (socket: Socket) => {
+    let users = new Users();
+
+    let user = new User({
+        id: "1",
+        pseudo: "Jean Tanrien",
+        imgUrl: "",
+        collection: users,
+    });    console.log(User);
+    
     console.log("Un utilisateur s'est connecté");
     socket.on("disconnect", (reason: string) => {
         console.log("Utilisateur déconnecté");
@@ -30,7 +40,7 @@ wsSrv.on("connection", (socket: Socket) => {
     })
     socket.on("chat", (msg: string) => {
         console.log(`Message du canal chat: "${msg}"`)
-        socket.emit("chat", `Vous avez écrit "${msg}"`)
+        socket.emit("chat", `${user.pseudo} : ${msg}"`)
     })
 })
 
