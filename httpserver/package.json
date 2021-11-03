@@ -1,0 +1,21 @@
+{
+  "name": "httpserver",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "exit 0",
+    "build": "tsc",
+    "clean": "rimraf dist/",
+    "start:dev": "ts-node src/index.ts",
+    "start": "npm run clean && npm run build && node dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  }
+}
