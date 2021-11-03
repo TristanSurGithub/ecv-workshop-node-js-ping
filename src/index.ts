@@ -2,19 +2,35 @@ import process from "process";
 import {
     IArgsParser,
     ArgsParser
-} from "./ArgsParser"
-const isServer : boolean =  process.argv.indexOf('server') !== -1
+} from "./ArgsParser";
 
-const argsParser:IArgsParser = new ArgsParser(process.argv)
+import {
+    IServer,
+    Server
+} from "./Server.js";
 
-if(argsParser.isServer()) {
-    const port:number = argsParser.getListeningPort();
-    console.log(`Try listening on 127.0.0.1:${port}`)
+import net from "net";
 
-} else if (process.argv.length >= 2) {
-    const address : string = process.argv[2]
-    console.log(address, process.argv);
+const argsParser: IArgsParser = new ArgsParser(process.argv)
+
+if (argsParser.isServer()) {
+    const listeningPort: number = argsParser.getListeningPort()
+    console.log(`Try listening on 127.0.0.1:${listeningPort}`)
+    const server: IServer = new Server({
+        listeningPort,
+        onData: (socket: net.Socket, data: string) => {
+            console.log(`Data: ${data}`)
+        }
+    })
+    server.listen()
+    console.log(`Server listening on port: ${listeningPort}`)
+
 } else {
-    console.error("merci de préciser une adresse")
+    const address: string | false = argsParser.getAddress()
+    if (address) {
+        console.log(`Vous voulez pinguer l'addresse ${address}`)
+    }
+    else {
+        console.log("Merci de fournir une adresse IPv4 correcte à pinguer")
+    }
 }
-

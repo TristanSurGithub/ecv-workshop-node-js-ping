@@ -44,9 +44,15 @@ export class ArgsParser implements IArgsParser {
     }
 
     getListeningPort(): number {
-        let port = this.args.find(args => {
-            return args.match('/[0-9]+/g')
-        });
+        let port = this.args.find(args =>{
+            return Number.isInteger(Number(args)) && (parseInt(args) >= 10000 && parseInt(args) <= 65535)
+        })
+
+        if(port){
+            return parseInt(port);
+        }
+        return 23456
+
     }
 
     getAddress(): string | false {
