@@ -31,7 +31,6 @@ export interface IUserCollection extends Iterator<IUser> {
     */
     del(id: string): void
 }
-
 export class UserCollection implements IUserCollection {
     users: { [k: string]: any }
     ids: Array<string>

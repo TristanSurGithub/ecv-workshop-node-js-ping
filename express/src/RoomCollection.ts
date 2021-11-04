@@ -32,37 +32,24 @@ export interface IRoomCollection extends Iterator<IRoom> {
     del (id: string): void
 }
 
-export class Rooms implements IRoomCollection{
+export class RoomCollection implements IRoomCollection{
 
 
     private rooms:{[k:string] :IRoom}
-    private _ids: Array<string>
+    private ids: Array<string>
     private nextIdx: number
 
     constructor() {
         this.rooms = {};
-        this._ids = [];
+        this.ids = [];
         this.nextIdx = 0;
     }
 
     get all(): Array<string> {
-        return this._ids
+        return this.ids
     }
 
     set all(v: Array<string>) {
-    }
-
-
-    add(room:IRoom): void {
-        if(this._ids.indexOf(room.id)==-1){
-            this._ids.push(room.id)
-        }
-    }
-
-    del(id: string): void {
-        if (this._ids.indexOf(id) !== -1) {
-            this._ids = this._ids.filter((ids) => ids !== id)
-        }
     }
 
     get(id: string):IRoom | false {
@@ -72,11 +59,22 @@ export class Rooms implements IRoomCollection{
         return false;
     }
 
-    // @ts-ignore
-    next(...args: Array<string>): { value: IRoom, done?: false } | { value: undefined, done: true } {
-        if (this.nextIdx < this._ids.length) {
-            // @ts-ignore
-            const ret = {value: IRoom, done: false} = {value: this.rooms[this._ids[this.nextIdx]], done: false}
+    add(room:IRoom): void {
+        if(this.ids.indexOf(room.id)==-1){
+            this.ids.push(room.id)
+        }
+    }
+
+    del(id: string): void {
+        if (this.ids.indexOf(id) !== -1) {
+            this.ids = this.ids.filter((ids) => ids !== id)
+        }
+    }
+
+    next(...args: Array<any>):{value : IRoom, done?: false} | { value : undefined, done :true}{
+        if (this.nextIdx >= this.ids.length) {
+            const ret : { value : IRoom, done : false }
+                = { value:this.rooms[this.ids[this.nextIdx]], done : false}
             this.nextIdx++
             return ret
         }
@@ -84,3 +82,4 @@ export class Rooms implements IRoomCollection{
         return {value: undefined, done: true}
     }
 }
+

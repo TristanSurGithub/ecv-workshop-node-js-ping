@@ -3,6 +3,7 @@ import {
     Server as SocketIOServer,
     Socket
 } from "socket.io"
+import { IRoomCollection, RoomCollection } from "./RoomCollection"
 import { User } from "./User"
 import { IUserCollection, UserCollection } from "./UserCollection"
 
@@ -44,18 +45,18 @@ export interface IWSServer {
     * @type {IRoomCollection}
     * @memberof IWSServer
     */
-    //TODO readonly rooms: IRoomCollection
-    readonly rooms: any
+    readonly rooms: IRoomCollection
 }
 
 export class WServer implements IWSServer {
     server: SocketIOServer
     onlineUsers: IUserCollection
-    rooms: any
+    rooms: IRoomCollection;
 
     constructor(config: IWSServerConfig) {
         this.server = new SocketIOServer(config.httpSrv)
         this.onlineUsers = new UserCollection()
+        this.rooms = new RoomCollection();
 
         this.server.on("connection", (socket: Socket) => {
             let users = new UserCollection();
@@ -70,12 +71,17 @@ export class WServer implements IWSServer {
                     console.log(`pour la raison suivante "${reason}"`);
                 }
             })
+            console.log(user);
+            
             socket.on("chat", (msg: string) => {
                 console.log(`Message du canal chat: "${msg}"`)
-                socket.emit("chat", `${user.pseudo} : ${msg}"`)
+                socket.emit("chat", `${user.pseudo} : ${msg}`)
             })
+        })
+
+        const port: number = 8000
+        config.httpSrv.listen(port, () => {
+            console.log(`Serveur en écoute sur ${port} ...`);
         })
     }
 }
-
-

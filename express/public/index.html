@@ -12,9 +12,11 @@
 <body>
     <div class="container">
         <div id="rooms">
-
+            <div class="room">
+                <img src="default.png" alt="">
+            </div>
         </div>
-        <div>
+        <div id="chat">
             <ul id="messages"></ul>
             <form action="" id="form">
                 <input type="input" autocomplete="off" name="input" id="input">
@@ -23,7 +25,7 @@
         </div>
     </div>
 </body>
-<script src="/sources/socket.io.js"></script>
+<script src="/chat/socket.io.js"></script>
 <script>
     var socket = io();
     var messages = document.getElementById("messages");
@@ -45,5 +47,4 @@
         window.scrollTo(0, document.body.scrollHeight)
     })
 </script>
-
 </html>
