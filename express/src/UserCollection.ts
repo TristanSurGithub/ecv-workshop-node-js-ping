@@ -1,4 +1,4 @@
-import { IUser, IUserConfig, User } from "./User"
+import { IUser } from "./User"
 
 export interface IUserCollection extends Iterator<IUser> {
     /**
@@ -32,7 +32,7 @@ export interface IUserCollection extends Iterator<IUser> {
     del(id: string): void
 }
 
-export class Users implements IUserCollection {
+export class UserCollection implements IUserCollection {
     users: { [k: string]: any }
     ids: Array<string>
     nextIdx: number

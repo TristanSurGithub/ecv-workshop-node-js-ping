@@ -1,4 +1,4 @@
-import { IUserCollection, Users } from "./UserCollection"
+import { IUserCollection, UserCollection } from "./UserCollection"
 
 export interface IUserConfig {
     /**
