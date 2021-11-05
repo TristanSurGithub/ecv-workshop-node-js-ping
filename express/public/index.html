@@ -41,10 +41,14 @@
     })
 
     socket.on("chat", function(msg) {
+        console.log(msg);
         var item = document.createElement("li");
-        item.textContent = msg;
+        item.innerHTML = '<img src="' + msg.avatar + '" alt="">'+ msg.message + '' 
+        console.log(item);
         messages.appendChild(item)
+        
         window.scrollTo(0, document.body.scrollHeight)
+        
     })
 </script>
 </html>

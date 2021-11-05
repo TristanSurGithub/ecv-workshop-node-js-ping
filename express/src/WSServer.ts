@@ -6,6 +6,7 @@ import {
 import { IRoomCollection, RoomCollection } from "./RoomCollection"
 import { User } from "./User"
 import { IUserCollection, UserCollection } from "./UserCollection"
+import { IRoom, Room } from "./Room";
 
 export interface IWSServerConfig {
     /**
@@ -52,30 +53,41 @@ export class WServer implements IWSServer {
     server: SocketIOServer
     onlineUsers: IUserCollection
     rooms: IRoomCollection;
+    room: IRoom 
 
     constructor(config: IWSServerConfig) {
         this.server = new SocketIOServer(config.httpSrv)
         this.onlineUsers = new UserCollection()
+        this.room = new Room({ 
+            id: '1', 
+            title: 'Default', 
+            usersCollection: this.onlineUsers
+         });
         this.rooms = new RoomCollection();
+        this.rooms.add(this.room);
 
         this.server.on("connection", (socket: Socket) => {
+            socket.join(this.room.id);
+           
             let users = new UserCollection();
             let user = new User({
                 id: socket.id,
                 pseudo: 'Jean Tanrien',
-                imgUrl: "",
+                imgUrl: 'avatar_default.png',
                 collection: users,
             })
+
+            this.room.joinUser(user.id)
+
             socket.on("disconnect", (reason: string) => {
                 if (reason) {
                     console.log(`pour la raison suivante "${reason}"`);
                 }
             })
-            console.log(user);
-            
+
             socket.on("chat", (msg: string) => {
                 console.log(`Message du canal chat: "${msg}"`)
-                socket.emit("chat", `${user.pseudo} : ${msg}`)
+                this.server.emit("chat", { avatar: user.imgUrl, pseudo: user.pseudo, message: msg })
             })
         })
 
